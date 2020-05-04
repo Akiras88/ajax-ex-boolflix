@@ -69,7 +69,8 @@ function printMovies(template, query) {
                 var html = template(movieObj);
                 movies.append(html);
             }
-            
+            // clear input
+            $('.Input').val('');
         },
         error: function(){
             console.log('ERROR');
