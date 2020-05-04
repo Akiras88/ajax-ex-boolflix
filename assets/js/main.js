@@ -21,11 +21,18 @@ $(document).ready(function() {
     var source = $('#movie-template').html();
     var template = Handlebars.compile(source);
 
-    // search with button
+    // search with button and enter 
     btnSearch.click(function(){
         var query = inputSearch.val();
         printMovies(template, query);
     });
+    inputSearch.keypress(function(e) {
+        if(e.which == 13) {
+            var query = inputSearch.val();
+            printMovies(template, query);
+        }
+    });
+
 }); // end document ready
 
 /**********************************************
