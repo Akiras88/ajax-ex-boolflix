@@ -84,8 +84,8 @@ function printMovie(movieInfo, template, movies) {
         var movieObj = { 
             title : movie.title,
             original_title : movie.original_title,
-            original_language : movie.original_language,
-            rating : movie.vote_average
+            original_language : flag(movie),
+            rating : ratingStar(movie)
         }
     // add template
     var html = template(movieObj);
@@ -96,4 +96,30 @@ function printMovie(movieInfo, template, movies) {
 // reset container function
 function reset(element) {
     element.html('');
+}
+
+// transfor raiting in a star function
+function ratingStar(movie) {
+    var ratingCeil = Math.ceil(movie.vote_average / 2);
+    var star = '';
+    // for ( var i = 0; i > ratingCeil; i++) {
+        // star += '<i class="fas fa-star"></i>';
+    // }
+    for ( var i = 0; i < ratingCeil; i++) {
+        star += '<i class="fas fa-star"></i>';
+    }
+    return star;
+}
+
+// transform language It or En in a flag function
+function flag(movie) {
+    var language = movie.original_language;
+    switch (language) {
+        case 'en':
+            return '<img class="flag" src="img/en.svg">'
+        case 'it':
+            return '<img class="flag" src="img/it.svg">'
+        default: 
+            return language;
+    }
 }
