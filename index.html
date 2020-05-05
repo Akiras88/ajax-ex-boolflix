@@ -9,23 +9,24 @@ maximum-scale=1.0">
 </head>
 <body>
     <!-- Input to movie search -->
-    <div class="search">
+    <header class="search">
         <input class="Input" type="text" placeholder="Search a movie">
         <button class="btn-search">Search</button>
-    </div>
+    </header>
     
 
-    <div class="movies"></div>
+    <main class="movies"></main>
 
 
     <!-- handlebars template movies -->
     <script id="movie-template" type="text/x-handlebars-template">
-        <ul class="movies-list">
-            <li>Title: {{title}}</li>
-            <li>Original title: {{original_title}}</li>
-            <li>Original language: {{original_language}}</li>
-            <li>Raiting: {{rating}}</li>
-        </ul>
+        <div class="movies-list"></div>
+            <ul>
+                <li>Title: {{title}}</li>
+                <li>Original title: {{original_title}}</li>
+                <li>Original language: {{original_language}}</li>
+                <li>Raiting: {{rating}}</li>
+            </ul>
     </script>
 
     <!-- handlebars -->

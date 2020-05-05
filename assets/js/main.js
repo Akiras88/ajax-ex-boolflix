@@ -23,13 +23,13 @@ $(document).ready(function() {
 
     // search with button and enter 
     btnSearch.click(function(){
-        var query = inputSearch.val();
-        printMovies(template, query);
+        var query = inputSearch.val().trim();
+        printMovies(template, query, inputSearch);
     });
     inputSearch.keypress(function(e) {
         if(e.which == 13) {
-            var query = inputSearch.val();
-            printMovies(template, query);
+            var query = inputSearch.val().trim();
+            printMovies(template, query, inputSearch);
         }
     });
 
@@ -39,41 +39,61 @@ $(document).ready(function() {
     FUNCTIONS
  **********************************************/
 
-// print movies search function
-function printMovies(template, query) {
+// search function
+function printMovies(template, query, inputSearch) {
     // reference
     var movies = $('.movies');
     // reference API
     var apiKey = '3fd3d81771a2efd18bf7d6e160d4ad81';
     var language = 'it-IT';
+    if ( query !== '' ) {
     // call API 
-    $.ajax({
-        url : 'https://api.themoviedb.org/3/search/movie', 
-        method : 'GET',
-        data: {
-            api_key : apiKey,
-            language : language,
-            query: query
-        },
-        success: function(res) {
-            movies.html('');
-            var movieInfo = res.results;
-            for (var i = 0; i < movieInfo.length; i++) {
-                var movieObj = { 
-                    title : movieInfo[i].title,
-                    original_title : movieInfo[i].original_title,
-                    original_language : movieInfo[i].original_language,
-                    rating : movieInfo[i].vote_average
+        $.ajax({
+            url : 'https://api.themoviedb.org/3/search/movie', 
+            method : 'GET',
+            data: {
+                api_key : apiKey,
+                language : language,
+                query: query
+            },
+            success: function(res) {
+                reset(movies);
+                var movieInfo = res.results;
+                if ( movieInfo.length > 0 ) {
+                    printMovie(movieInfo, template, movies);
+                } else {
+                    alert('Prego, inserisci una parola valida');
+                    inputSearch.select();
                 }
-                // add template
-                var html = template(movieObj);
-                movies.append(html);
-            }
-            // clear input
-            $('.Input').val('');
-        },
-        error: function(){
-            console.log('ERROR');
-        } 
-    });
+            },
+            error: function(){
+                console.log('ERROR API');
+            } 
+        });
+    } else {
+        alert('Inserisci un titolo valido');
+        inputSearch.focus();
+    }
+}
+
+// print movie details function
+function printMovie(movieInfo, template, movies) {
+    reset(movies);
+    for (var i = 0; i < movieInfo.length; i++) {
+        var movie = movieInfo[i];
+        var movieObj = { 
+            title : movie.title,
+            original_title : movie.original_title,
+            original_language : movie.original_language,
+            rating : movie.vote_average
+        }
+    // add template
+    var html = template(movieObj);
+    movies.append(html);
+    }
+}
+
+// reset container function
+function reset(element) {
+    element.html('');
 }
