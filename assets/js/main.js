@@ -109,24 +109,23 @@ function callApi(obj, template, movies, type){
 function printMovie(movieInfo, template, movies, type) {
     for (var i = 0; i < movieInfo.length; i++) {
         var movie = movieInfo[i];
-        var title, originalTitle, overview;
+        var title, originalTitle;
 
         if( type == 'Movie' ) {
             title = movie.title;
             originalTitle = movie.original_title;
-            overview = movie.overview;
         } else if ( type == 'TV Series' ) {
             title = movie.name;
             originalTitle = movie.orinal_name;
-            overview = movie.overview;
         }
         var movieObj = { 
+            img : 'https://image.tmdb.org/t/p/w342/' + movie.backdrop_path,
             title : title,
             original_title : originalTitle,
             original_language : flag(movie),
             rating : ratingStar(movie),
             type : type,
-            overview : overview
+            overview : movie.overview
         }
     // add template
     var html = template(movieObj);
