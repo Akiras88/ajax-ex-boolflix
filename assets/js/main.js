@@ -22,6 +22,16 @@ the screen for each film found:
  * We then broaden the search to include TV series.
  ***************************************************************/
 
+/************************************************************************
+ * 
+ * MILESTONE 3
+ * 
+ * In this milestone, first of all we will make a refactor of the ajax calls by creating a single function to which we will pass the url, the apy key, the query, the type, etc ...
+ * In this way we will be able to call the search both with the keypress on enter and with the click.
+ * Then, we add the cover of the film or series to our list.
+ * 
+ ************************************************************************/
+
 $(document).ready(function() {
 
     // referece
