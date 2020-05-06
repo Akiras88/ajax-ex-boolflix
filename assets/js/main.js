@@ -1,17 +1,28 @@
+/*************************************************************
+ * 
+ * MILESTONE 1
+ * 
+ * clicking the button, search the API for all the films that contain 
+what the  user wrote.
+ * After the API response, we want to display the following values on 
+the screen for each film found:
+ * -Title,
+ * -Original title,
+ * -Original language,
+ * -Rating.
+ * 
+ ***********************************************************/
+
+/****************************************************************
+ * 
+ * MILESTONE 2
+ * 
+ * We transform the score from 1 to 10 decimal in an integer from 1 to 5, so as to allow us to print on the screen a number of full stars ranging from 1 to 5.
+ * We then transform the static string of the language into a real flag of the corresponding nation, managing the case in which we do not have the nation flag returned by the API.
+ * We then broaden the search to include TV series.
+ ***************************************************************/
+
 $(document).ready(function() {
-    
-    /*************************************************************
-     * 
-     * MILESTONE 1
-     * 
-     * clicking the button, search the API for all the films that contain what the  user wrote.
-     * After the API response, we want to display the following values on the screen for each film found:
-     * -Title,
-     * -Original title,
-     * -Original language,
-     * -Rating.
-     * 
-     ***********************************************************/
 
     // referece
     var btnSearch = $('.btn-search');
@@ -25,13 +36,11 @@ $(document).ready(function() {
     btnSearch.click(function(){
         var query = inputSearch.val().trim();
         searchMovies(template, query, inputSearch);
-        searchTv(template, query, inputSearch);
     });
     inputSearch.keypress(function(e) {
         if(e.which == 13) {
             var query = inputSearch.val().trim();
             searchMovies(template, query, inputSearch);
-            searchTv(template, query, inputSearch);
         }
     });
 
@@ -45,11 +54,12 @@ $(document).ready(function() {
 function searchMovies(template, query, inputSearch) {
     // reference
     var movies = $('.movies');
+    reset(movies); 
     // reference API
     var apiKey = '3fd3d81771a2efd18bf7d6e160d4ad81';
     var language = 'it-IT';
     if ( query !== '' ) {
-    // call API 
+    // call API movie
         $.ajax({
             url : 'https://api.themoviedb.org/3/search/movie', 
             method : 'GET',
@@ -59,53 +69,39 @@ function searchMovies(template, query, inputSearch) {
                 query: query
             },
             success: function(res) {
+                var type = 'Movie';
                 var movieInfo = res.results;
-                if (( movieInfo.length > 0 ) || ( tvInfo.length > 0 )) {
-                    printMovie(movieInfo, template, movies);
+                if ( movieInfo.length > 0 ) {
+                    printMovie(movieInfo, template, movies, type);
                 } else {
-                    alert('Prego, inserisci una parola valida');
-                    inputSearch.select();
+                    console.log('Prego, inserisci un titolo valido');
                 }
             },
             error: function(){
                 console.log('ERROR API');
             } 
         });
-    } else {
-        alert('Inserisci un titolo valido');
-        inputSearch.focus();
-    }
-}
 
-// search tv function
-function searchTv(template, query, inputSearch) {
-    // reference
-    var movies = $('.movies');
-    // reference API
-    var apiKey = '3fd3d81771a2efd18bf7d6e160d4ad81';
-    var language = 'it-IT';
-    if ( query !== '' ) {
-        // call API
-        $.ajax ({
-            url : 'https://api.themoviedb.org/3/search/tv',
+        // call api TV series
+        $.ajax({
+            url : 'https://api.themoviedb.org/3/search/tv', 
             method : 'GET',
-            data : {
+            data: {
                 api_key : apiKey,
                 language : language,
                 query: query
             },
-            success : function(res){
-                var tvInfo = res.results;
-                if ( tvInfo.length > 0 ) {
-                    printTv(tvInfo, template, movies);
+            success: function(res) {
+                var type = 'TV Series';
+                var movieInfo = res.results;
+                if ( movieInfo.length > 0 ) {
+                    printMovie(movieInfo, template, movies, type);
                 } else {
-                    alert('Prego, inserisci una parola valida');
-                    inputSearch.select();
+                    console.log('Prego, inserisci un titolo valido');
                 }
             },
-            error: function() {
-                alert('Inserisci un titolo valido');
-                inputSearch.focus();
+            error: function(){
+                console.log('ERROR API');
             }
         });
     } else {
@@ -114,38 +110,30 @@ function searchTv(template, query, inputSearch) {
     }
 }
 
+
 // print movie details function
-function printMovie(movieInfo, template, movies) {
-    reset(movies);
+function printMovie(movieInfo, template, movies, type) {
     for (var i = 0; i < movieInfo.length; i++) {
         var movie = movieInfo[i];
+
+        var title, originalTitle
+
+        if( type == 'Movie' ) {
+            title = movie.title;
+            originalTitle = movie.original_title;
+        } else if ( type == 'TV Series' ) {
+            title = movie.name;
+            originalTitle = movie.orinal_name;
+        }
         var movieObj = { 
-            title : movie.title,
-            original_title : movie.original_title,
+            title : title,
+            original_title : originalTitle,
             original_language : flag(movie),
             rating : ratingStar(movie),
-            type : 'movie'
+            type : type
         }
     // add template
     var html = template(movieObj);
-    movies.append(html);
-    }
-}
-
-//print tv details function
-function printTv(tvInfo, template, movies) {
-    reset(movies);
-    for (var i = 0; i < tvInfo.length; i++) {
-        var tv = tvInfo[i];
-        var tvObj = { 
-            title : tv.name,
-            original_title : tv.original_name,
-            original_language : flag(tv),
-            rating : ratingStar(tv),
-            type : 'tv'
-        }
-    // add template
-    var html = template(tvObj);
     movies.append(html);
     }
 }
@@ -157,13 +145,15 @@ function reset(element) {
 
 // transfor raiting in a star function
 function ratingStar(movie) {
-    var ratingCeil = Math.ceil(movie.vote_average / 2);
+    var ratingFloor = Math.floor(movie.vote_average / 2);
     var star = '';
-    // for ( var k = 0; k > ratingCeil; k++) {
-        // star += '<i class="far fa-star"></i>';
     // }
-    for ( var i = 0; i < ratingCeil; i++) {
-        star += '<i class="fas fa-star"></i>';
+    for ( var i = 1; i <= 5; i++) {
+        if( i <= ratingFloor ) {
+            star += '<i class="fas fa-star"></i>';
+        } else {
+            star += '<i class="far fa-star"></i>';
+        } 
     }
     return star;
 }
