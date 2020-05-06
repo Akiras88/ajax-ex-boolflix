@@ -56,16 +56,24 @@ function searchMovies(template, query, inputSearch) {
     var movies = $('.movies');
     reset(movies); 
     // reference API
-    var myApiMovie = 'https://api.themoviedb.org/3/search/movie';
-    var myApiTv = 'https://api.themoviedb.org/3/search/tv';
-    var apiKey = '3fd3d81771a2efd18bf7d6e160d4ad81';
-    var language = 'it-IT';
     var typeMovie = 'Movie';
     var typeTv = 'TV Series';
+    var objMovie = {
+        query : query,
+        myApi : 'https://api.themoviedb.org/3/search/movie',
+        apiKey : '3fd3d81771a2efd18bf7d6e160d4ad81',
+        language : 'it-IT',
+    }
+    var objTv = {
+        query : query,
+        myApi : 'https://api.themoviedb.org/3/search/tv',
+        apiKey : '3fd3d81771a2efd18bf7d6e160d4ad81',
+        language : 'it-IT',
+    }
     if ( query !== '' ) {
         // call API movie
-        callApi(query, myApiMovie, apiKey, language, template, movies, typeMovie);
-        callApi(query, myApiTv, apiKey, language, template, movies, typeTv);
+        callApi(objMovie, template, movies, typeMovie);
+        callApi(objTv, template, movies, typeTv);
     } else {
         alert('Inserisci un titolo valido');
         inputSearch.focus();
@@ -73,14 +81,14 @@ function searchMovies(template, query, inputSearch) {
 }
 
 // API function
-function callApi(query, myApi, apiKey, language, template , movies, type) {
+function callApi(obj, template, movies, type){
     $.ajax({
-        url : myApi, 
+        url : obj.myApi, 
         method : 'GET',
         data: {
-            api_key : apiKey,
-            language : language,
-            query: query
+            api_key : obj.apiKey,
+            language : obj.language,
+            query: obj.query
         },
         success: function(res) {
             // var type = 'Movie';
@@ -101,21 +109,24 @@ function callApi(query, myApi, apiKey, language, template , movies, type) {
 function printMovie(movieInfo, template, movies, type) {
     for (var i = 0; i < movieInfo.length; i++) {
         var movie = movieInfo[i];
-        var title, originalTitle
+        var title, originalTitle, overview;
 
         if( type == 'Movie' ) {
             title = movie.title;
             originalTitle = movie.original_title;
+            overview = movie.overview;
         } else if ( type == 'TV Series' ) {
             title = movie.name;
             originalTitle = movie.orinal_name;
+            overview = movie.overview;
         }
         var movieObj = { 
             title : title,
             original_title : originalTitle,
             original_language : flag(movie),
             rating : ratingStar(movie),
-            type : type
+            type : type,
+            overview : overview
         }
     // add template
     var html = template(movieObj);
