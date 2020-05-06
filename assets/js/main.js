@@ -119,13 +119,13 @@ function printMovie(movieInfo, template, movies, type) {
             originalTitle = movie.orinal_name;
         }
         var movieObj = { 
-            img : 'https://image.tmdb.org/t/p/w342/' + movie.backdrop_path,
+            img : img(movie),
             title : title,
             original_title : originalTitle,
             original_language : flag(movie),
             rating : ratingStar(movie),
             type : type,
-            overview : movie.overview
+            overview : movie.overview.substr(0, 200) + '...'
         }
     // add template
     var html = template(movieObj);
@@ -142,7 +142,6 @@ function reset(element) {
 function ratingStar(movie) {
     var ratingFloor = Math.floor(movie.vote_average / 2);
     var star = '';
-    // }
     for ( var i = 1; i <= 5; i++) {
         if( i <= ratingFloor ) {
             star += '<i class="fas fa-star"></i>';
@@ -166,3 +165,11 @@ function flag(movie) {
     }
 }
 
+// change image function 
+function img(movie) {
+    if ( movie.backdrop_path == null ) {
+        return  'img/no-poster.png';
+    } else {
+        return  'https://image.tmdb.org/t/p/w342/' + movie.backdrop_path;
+    }
+}

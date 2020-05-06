@@ -21,3 +21,6 @@ body {
     max-height: 15px;
     max-width: 15px;
 }
+.poster {
+    max-height: 300px;
+}
