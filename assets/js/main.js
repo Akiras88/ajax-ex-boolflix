@@ -56,66 +56,51 @@ function searchMovies(template, query, inputSearch) {
     var movies = $('.movies');
     reset(movies); 
     // reference API
+    var myApiMovie = 'https://api.themoviedb.org/3/search/movie';
+    var myApiTv = 'https://api.themoviedb.org/3/search/tv';
     var apiKey = '3fd3d81771a2efd18bf7d6e160d4ad81';
     var language = 'it-IT';
+    var typeMovie = 'Movie';
+    var typeTv = 'TV Series';
     if ( query !== '' ) {
-    // call API movie
-        $.ajax({
-            url : 'https://api.themoviedb.org/3/search/movie', 
-            method : 'GET',
-            data: {
-                api_key : apiKey,
-                language : language,
-                query: query
-            },
-            success: function(res) {
-                var type = 'Movie';
-                var movieInfo = res.results;
-                if ( movieInfo.length > 0 ) {
-                    printMovie(movieInfo, template, movies, type);
-                } else {
-                    console.log('Prego, inserisci un titolo valido');
-                }
-            },
-            error: function(){
-                console.log('ERROR API');
-            } 
-        });
-
-        // call api TV series
-        $.ajax({
-            url : 'https://api.themoviedb.org/3/search/tv', 
-            method : 'GET',
-            data: {
-                api_key : apiKey,
-                language : language,
-                query: query
-            },
-            success: function(res) {
-                var type = 'TV Series';
-                var movieInfo = res.results;
-                if ( movieInfo.length > 0 ) {
-                    printMovie(movieInfo, template, movies, type);
-                } else {
-                    console.log('Prego, inserisci un titolo valido');
-                }
-            },
-            error: function(){
-                console.log('ERROR API');
-            }
-        });
+        // call API movie
+        callApi(query, myApiMovie, apiKey, language, template, movies, typeMovie);
+        callApi(query, myApiTv, apiKey, language, template, movies, typeTv);
     } else {
         alert('Inserisci un titolo valido');
         inputSearch.focus();
     }
 }
 
+// API function
+function callApi(query, myApi, apiKey, language, template , movies, type) {
+    $.ajax({
+        url : myApi, 
+        method : 'GET',
+        data: {
+            api_key : apiKey,
+            language : language,
+            query: query
+        },
+        success: function(res) {
+            // var type = 'Movie';
+            var movieInfo = res.results;
+            if ( movieInfo.length > 0 ) {
+                printMovie(movieInfo, template, movies, type);
+            } else {
+                console.log('Prego, inserisci un titolo valido');
+            }
+        },
+        error: function(){
+            console.log('ERROR API');
+        } 
+    });
+}
 
 // print movie details function
 function printMovie(movieInfo, template, movies, type) {
     for (var i = 0; i < movieInfo.length; i++) {
         var movie = movieInfo[i];
-
         var title, originalTitle
 
         if( type == 'Movie' ) {
@@ -170,3 +155,4 @@ function flag(movie) {
             return language;
     }
 }
+
