@@ -41,6 +41,9 @@ body {
     font-size: 18px;
     vertical-align: middle;
 }
+.input-search i:hover {
+    color: red;
+}
 
 /* MAIN STYLE */
 .movies {
