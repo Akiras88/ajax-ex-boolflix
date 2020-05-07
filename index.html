@@ -20,18 +20,16 @@ maximum-scale=1.0">
             <i class="fas fa-search btn-search"></i>
         </div>
     </header>
-    
 
     <main class="movies"></main>
-
 
     <!-- handlebars template movies -->
     <script id="movie-template" type="text/x-handlebars-template">
         <div class="movies-list">
-            <h4>{{title}}</h4>
+            <h5>{{title}}</h5>
             <img class="poster" src="{{img}}" alt="image movie">
             <div class="hover-info">
-                <ul>
+                <ul class="list">
                     <li>
                         <span>Title:</span> 
                         <span>{{title}}</span>

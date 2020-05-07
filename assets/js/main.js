@@ -53,12 +53,6 @@ $(document).ready(function() {
             searchMovies(template, query, inputSearch);
         }
     });
-    $('body').on('mouseenter', '.movies-list', function(){
-            $(this).find('.hover-info').addClass('visible');
-    }).on('mouseleave', '.movies-list', function(){
-        $(this).find('.hover-info').removeClass('visible');
-    });
-
 }); // end document ready
 
 /**********************************************
