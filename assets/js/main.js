@@ -53,6 +53,11 @@ $(document).ready(function() {
             searchMovies(template, query, inputSearch);
         }
     });
+    $('body').on('mouseenter', '.movies-list', function(){
+            $(this).find('.hover-info').addClass('visible');
+    }).on('mouseleave', '.movies-list', function(){
+        $(this).find('.hover-info').removeClass('visible');
+    });
 
 }); // end document ready
 
@@ -81,8 +86,9 @@ function searchMovies(template, query, inputSearch) {
         language : 'it-IT',
     }
     if ( query !== '' ) {
-        // call API movie
+        // call API movies
         callApi(objMovie, template, movies, typeMovie);
+        // call API tv series
         callApi(objTv, template, movies, typeTv);
     } else {
         alert('Inserisci un titolo valido');
@@ -135,6 +141,7 @@ function printMovie(movieInfo, template, movies, type) {
             original_language : flag(movie),
             rating : ratingStar(movie),
             type : type,
+            overview : true,
             overview : movie.overview.substr(0, 200) + '...'
         }
     // add template
@@ -177,9 +184,9 @@ function flag(movie) {
 
 // change image function 
 function img(movie) {
-    if ( movie.backdrop_path == null ) {
+    if ( movie.poster_path == null ) {
         return  'img/no-poster.png';
     } else {
-        return  'https://image.tmdb.org/t/p/w342/' + movie.backdrop_path;
+        return  'https://image.tmdb.org/t/p/w342/' + movie.poster_path;
     }
 }

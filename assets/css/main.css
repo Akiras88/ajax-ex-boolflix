@@ -1,3 +1,5 @@
+/* FONT FAMILY */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap');
 /* GENERAL SETTINGS */
 * {
     margin: 0;
@@ -7,7 +9,7 @@
 body {
     background: #242526;
     color: #fff;
-    font-family: sans-serif;
+    font-family: 'Noto Sans JP', sans-serif;
 }
 
 /* HEADER STYLE */
@@ -16,7 +18,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 25px;
+    padding: 10px 40px;
     margin-bottom: 20px;
 }
 .logo img {
@@ -25,14 +27,18 @@ body {
 .input-search .Input {
     background: rgba(0, 0, 0, 0.5);
     height: 30px;
-    width: 200px;
+    width: 120px;
     color: #fff;
     outline: none;
+    transition: width .4s;
+}
+.input-search .Input:hover {
+    width: 200px;
 }
 .input-search i{
     margin-left: 10px;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 18px;
     vertical-align: middle;
 }
 
@@ -48,15 +54,47 @@ body {
 /* MOVIES TEMPLATE STYLE */
 
 .movies-list {
+    padding: 0 20px 30px;
+    width: calc(100%/5);
+    position: relative;
+    cursor: pointer;
+}
+.poster {
+    height: 280px;
+    transition: filter 1s,
+                transform .5s;
+}
+.poster:hover {
+    transform: scale(1.5);
+    filter: blur(10px);
+}
+.hover-info ul {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     list-style: none;
-    padding: 15px;
+    font-size: 13px;
+}
+.hover-info li {
+    padding-bottom: 8px;
+}
+.hover-info li :first-child {
+    font-weight: 700;
+    font-size: 14px;
+}
+.hover-info {
+    position: absolute;
+    top: 0;
+    opacity: 0;
 }
 .flag {
     vertical-align: middle;
     max-height: 15px;
     max-width: 15px;
 }
-.poster {
-    height: 150px;
-    width: 250px;
+.visible {
+    opacity: 1;
+}
+.yellow {
+    color: lightgoldenrodyellow;
 }
